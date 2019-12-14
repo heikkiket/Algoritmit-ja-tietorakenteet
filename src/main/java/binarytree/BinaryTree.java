@@ -26,6 +26,10 @@ public class BinaryTree {
     static BinaryTree getFound() {
         return found;
     }
+
+    public Node getNode() {
+        return root;
+    }
     
     void setNotFound() {
         found = null;
@@ -83,6 +87,7 @@ public class BinaryTree {
             this.root = new Node(string);
         }
 
+        // returns -1 if smaller, 0 if same and 1 if larger
         int result = string.compareTo(root.getData());
         if(result < 0) {
             if(root.left() == null) {
@@ -101,38 +106,86 @@ public class BinaryTree {
         }
     }
 
-    public Node searchKey(String key) {
+    public BinaryTree searchKey(String key) {
         if(root == null) {
             return null;
         } else {
             int result = key.compareTo(root.getData());
 
             if(result < 0) {
-                return searchFromLeft(key);
+                return searchRecursive(root.left(), key);
             } else if(result > 0) {
-                return searchFromRight(key);
+                return searchRecursive(root.right(), key);
             } else {
-                return root;
+                return this;
             }
         }
 
     }
 
-    private Node searchFromLeft(String key) {
-       if(root.left() == null) {
+    private BinaryTree searchRecursive(BinaryTree tree, String key) {
+       if(tree == null) {
            return null;
        } else {
-           return root.left().searchKey(key);
+           return tree.searchKey(key);
        }
     }
 
-    private Node searchFromRight(String key) {
-        if(root.right() == null) {
-            return null;
+    public Node removeLeftmostNode() {
+        return this.removeLeftmostNode(null);
+    }
+
+    public Node removeLeftmostNode(BinaryTree parent) {
+        if(root.left() == null) {
+            // this is the leftmost node, so remove itself.
+
+            // if we have a right node, move it to parents left.
+            parent.setLeft(null);
+            if(root.right() != null) {
+                parent.setLeft(root.right());
+            }
+            return this.root;
         } else {
-            return root.right().searchKey(key);
+            return root.left().removeLeftmostNode(this);
+        }
+    }
+
+    public void removeNode(String key) {
+        this.removeRecursive(null, key);
+    }
+
+    private BinaryTree removeRecursive(BinaryTree parent, String key) {
+        // Empty tree
+        if(this.root == null) {
+            return null;
         }
 
+        int result = key.compareTo(root.getData());
+        if(result < 0) {
+            root.setLeft(root.left().removeRecursive(this, key));
+            return this;
+        } else if(result > 0) {
+            root.setRight(root.right().removeRecursive(this, key));
+            return this;
+        } else {
+
+            if(root.isLeaf()) {
+                root = null;
+                return null;
+            } else if(root.left() == null) {
+                return root.right();
+            } else if(root.right() == null) {
+                return root.left();
+           
+            // root has two subtrees:
+            } else
+                this.root = root.right().removeLeftmostNode();
+                return parent;
+            }
+    }
+
+    private void setRoot(Node node) {
+        root = node;
     }
 
 }

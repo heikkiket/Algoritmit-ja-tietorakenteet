@@ -45,4 +45,20 @@ class Node {
                 return content;
         }
         
+        public Boolean isLeaf() {
+            if( left == null && right == null) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public Boolean hasTwoSubtrees() {
+            if(left != null && right != null) {
+                return true;
+            }
+
+            return false;
+        }
+        
 }

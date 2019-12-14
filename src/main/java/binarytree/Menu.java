@@ -26,12 +26,13 @@ public class Menu {
         BinaryTree tree = null, upDated = null;
         String data;
         do {
+            System.out.println("\t\t\tMerkkijonoja tallentava binääripuu");
             
             System.out.println("\n\t\t\t1. Luo juurisolmu.");
             System.out.println("\t\t\t2. Lisää avain.");
             System.out.println("\t\t\t3. Käy puu läpi esijärjestyksessä.");
             System.out.println("\t\t\t4. Etsi solmua avaimella");
-            System.out.println("\t\t\t5. Päivitä uusi uusi solmu.");
+            System.out.println("\t\t\t5. Poista solmu");
             System.out.println("\t\t\t6. lopetus ");
             System.out.print("\n\n"); // tehdään tyhjiä rivejä
             select = Lue.merkki();
@@ -51,9 +52,9 @@ public class Menu {
                     break;
                 case '4':
                     System.out.println("Anna avain, jota haetaan");
-                    Node result = tree.searchKey(Lue.rivi());
+                    BinaryTree result = tree.searchKey(Lue.rivi());
                     if(result != null) {
-                        System.out.println("Tulos: " + result.getData());
+                        System.out.println("Tulos: " + result.getNode().getData());
                     } else {
                         System.out.println("Avaimella ei löytynyt mitään.");
                     }
@@ -62,27 +63,8 @@ public class Menu {
                     if (tree == null) {
                         System.out.println("Et ole muodostanut juurisolmua.");
                     } else {
-                        System.out.println("Anna solmun sisältö (merkkijono)");
-                        BinaryTree newTree = new BinaryTree(new String(Lue.rivi()));
-                        
-                        tree.setNotFound();
-                        tree.findWithPreOrder();
-                        upDated = BinaryTree.getFound();
-                        if (upDated == null) // ei valittu mitään
-                        {
-                            break;
-                        }
-                        System.out.print("Kytke vasemmalle? (k/e)");
-                        select1 = Lue.merkki();
-                        if (select1 == 'k') {
-                            upDated.setLeft(newTree);
-                        } else {
-                            System.out.print("Kytke oikealle? (k/e)");
-                            select1 = Lue.merkki();
-                            if (select1 == 'k') {
-                                upDated.setRight(newTree);
-                            }
-                        }
+                        System.out.println("Anna poistettavan solmun avain");
+                        tree.removeNode(Lue.rivi());
                     }
                     break;
                 case '6':
