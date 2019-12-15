@@ -13,6 +13,7 @@ public class BinaryTree {
 
     private Node root;
     public static BinaryTree found;
+    private int height = -1;
     
     public BinaryTree() {
         this.root = null;
@@ -70,14 +71,52 @@ public class BinaryTree {
         root.setRight(newTree);
     }
 
-    void preOrder() {
+    public int getHeight() {
+
+        if(this.height == -1)
+            calculateHeight();
+        return this.height;
+    }
+
+    private int calculateHeight() {
+        this.height = 0;
+        if(root == null) {
+            return 0;
+        }
+
+        int leftHeight = 0, rightHeight = 0;
+
+        // add one to the heights, because their relative height to us is one.
+        if(root.left() != null) {
+            leftHeight = 1 + root.left().calculateHeight();
+        }
+        if(root.right() != null) {
+            rightHeight = 1 + root.right().calculateHeight();
+        }
+
+        if(leftHeight > rightHeight) {
+            this.height += leftHeight;
+        } else {
+            this.height += rightHeight;
+        }
+        return this.height;
+    }
+
+    void printPreOrder() {
+        printPreOrder(false);
+    }
+
+    void printPreOrder(boolean withHeight) {
         if(root != null) {
-            System.out.println(root.getData() + ", ");
+            String heightStr = "";
+            if(withHeight) 
+                heightStr = String.valueOf(getHeight());
+            System.out.println(root.getData() + ", " + heightStr);
             if(root.left() != null) {
-                root.left().preOrder();
+                root.left().printPreOrder(withHeight);
             }
             if(root.right() != null) {
-                root.right().preOrder();
+                root.right().printPreOrder(withHeight);
             }
         }
     }
@@ -104,6 +143,7 @@ public class BinaryTree {
         } else {
             System.out.println("Avain " + string + " löytyy jo puusta.");
         }
+        this.calculateHeight();
     }
 
     public BinaryTree searchKey(String key) {
@@ -152,6 +192,7 @@ public class BinaryTree {
 
     public void removeNode(String key) {
         this.removeRecursive(null, key);
+        this.calculateHeight();
     }
 
     private BinaryTree removeRecursive(BinaryTree parent, String key) {

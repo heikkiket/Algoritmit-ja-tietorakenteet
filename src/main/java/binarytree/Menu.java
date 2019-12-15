@@ -47,7 +47,11 @@ public class Menu {
                     tree.addKey(new String(Lue.rivi()));
                     break;
                 case '3':
-                    tree.preOrder();
+                    System.out.println("Näytetäänkö solmun korkeus? [k/e]");
+                    if(Lue.merkki() == 'k')
+                        tree.printPreOrder(true);
+                    else tree.printPreOrder();
+
                     char h = Lue.merkki(); // pysäytetään kontrolli
                     break;
                 case '4':
